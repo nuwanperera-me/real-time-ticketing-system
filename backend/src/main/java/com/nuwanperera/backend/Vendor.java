@@ -30,7 +30,7 @@ public class Vendor implements Runnable {
     }
   }
 
-  public int getVendorId() {
+  public int getId() {
     return id;
   }
 
