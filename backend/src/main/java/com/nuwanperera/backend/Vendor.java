@@ -16,6 +16,9 @@ public class Vendor implements Runnable {
   @Override
   public void run() {
     while (true) {
+      if (!Configuration.getInstance().getRunningStatus()) {
+        continue;
+      }
       for (int i = 0; i < ticketPerRelease; i++) {
         Ticket ticket = new Ticket();
         System.out.printf("Vendor %d is adding ticket %d%n", id, ticket.getId());

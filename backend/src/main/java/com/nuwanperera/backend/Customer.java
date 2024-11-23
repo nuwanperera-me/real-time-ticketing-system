@@ -14,6 +14,9 @@ public class Customer implements Runnable {
   @Override
   public void run() {
     while (true) {
+      if (!Configuration.getInstance().getRunningStatus()) {
+        continue;
+      }
       TicketPool.getInstance().removeTicket(this.id);
       try {
         Thread.sleep(retrievalInterval);

@@ -10,7 +10,7 @@ public class TicketPool {
   private List<Ticket> tickets = Collections.synchronizedList(new ArrayList<Ticket>());
 
   private int totalTickets;
-  private int maxTicketPoolSize = Configuration.getInstance().getMaxTicketsCapacity();
+  // private int maxTicketPoolSize = Configuration.getInstance().getMaxTicketsCapacity();
 
   private TicketPool() {}
 
@@ -22,7 +22,7 @@ public class TicketPool {
   }
 
   public synchronized void addTicket(Ticket ticket) {
-    if (tickets.size() < maxTicketPoolSize) {
+    if (tickets.size() < Configuration.getInstance().getMaxTicketsCapacity()) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
