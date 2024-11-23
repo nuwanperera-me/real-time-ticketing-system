@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +52,7 @@ public class BackendApplication {
 
 		System.out.printf("Created customer with id %d and retrieval interval %d%n", customer.getId(), retrievalInterval);
 
-		return ResponseEntity.ok(customer);
+		return ResponseEntity.status(HttpStatus.CREATED).body(customer);
 	}
 
 	@PostMapping("/vendors")
@@ -79,6 +81,59 @@ public class BackendApplication {
 		System.out.printf("Created vendor with id %d and release interval %d and tickets per release %d%n", vendor.getId(),
 				releaseInterval, ticketsPerRelease);
 
-		return ResponseEntity.ok(vendor);
+		return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
+	}
+
+	@GetMapping("/threads")
+	public HashMap<String, String> getThreadsNames() {
+		HashMap<String, String> threadNames = new HashMap<String, String>();
+		for (String name : threads.keySet()) {
+			threadNames.put(name, threads.get(name).getState().toString());
+		}
+		return threadNames;
+	}
+
+	@GetMapping("/configurations")
+	public Configuration getConfiguration() {
+		return Configuration.getInstance();
+	}
+
+	@PostMapping("/configurations")
+	public ResponseEntity<Object> updateConfiguration(@RequestBody HashMap<String, Object> request) {
+		Configuration config = Configuration.getInstance();
+
+		if (request.containsKey("status")) {
+			config.setRunningStatus((boolean) request.get("status"));
+		}
+		if (request.containsKey("total_tickets")) {
+			int totalTickets = (int) request.get("total_tickets");
+			config.setTotalTickets(totalTickets);
+			System.out.printf("Updated total tickets to %d%n", totalTickets);
+		}
+		if (request.containsKey("ticket_release_rate")) {
+			int ticketReleaseRate = (int) request.get("ticket_release_rate");
+			config.setTicketReleaseRate(ticketReleaseRate);
+			System.out.printf("Updated ticket release rate to %d%n", ticketReleaseRate);
+		}
+
+		if (request.containsKey("customer_retrieval_rate")) {
+			int customerRetrievalRate = (int) request.get("customer_retrieval_rate");
+			config.setCustomerRetrivalRate(customerRetrievalRate);
+			System.out.printf("Updated customer retrieval rate to %d%n", customerRetrievalRate);
+		}
+
+		if (request.containsKey("max_tickets_capacity")) {
+			int maxTicketsCapacity = (int) request.get("max_tickets_capacity");
+			config.setMaxTicketsCapacity(maxTicketsCapacity);
+			System.out.printf("Updated max tickets capacity to %d%n", maxTicketsCapacity);
+		}
+
+		if (request.containsKey("release_interval")) {
+			int releaseInterval = (int) request.get("release_interval");
+			config.setReleaseInterval(releaseInterval);
+			System.out.printf("Updated release interval to %d%n", releaseInterval);
+		}
+
+		return ResponseEntity.ok().body(config);
 	}
 }
