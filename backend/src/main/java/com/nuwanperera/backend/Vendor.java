@@ -20,7 +20,7 @@ public class Vendor implements Runnable {
         continue;
       }
       for (int i = 0; i < ticketPerRelease; i++) {
-        Ticket ticket = new Ticket();
+        Ticket ticket = new Ticket(this.id);
         System.out.printf("Vendor %d is adding ticket %d%n", id, ticket.getId());
         TicketPool.getInstance().addTicket(ticket);
       }
