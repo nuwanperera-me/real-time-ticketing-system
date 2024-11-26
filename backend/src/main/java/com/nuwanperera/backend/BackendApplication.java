@@ -105,11 +105,11 @@ public class BackendApplication {
 		if (request.containsKey("status")) {
 			config.setRunningStatus((boolean) request.get("status"));
 		}
-		if (request.containsKey("total_tickets")) {
-			int totalTickets = (int) request.get("total_tickets");
-			config.setTotalTickets(totalTickets);
-			System.out.printf("Updated total tickets to %d%n", totalTickets);
-		}
+		// if (request.containsKey("total_tickets")) {
+		// int totalTickets = (int) request.get("total_tickets");
+		// config.setTotalTickets(totalTickets);
+		// System.out.printf("Updated total tickets to %d%n", totalTickets);
+		// }
 		if (request.containsKey("ticket_release_rate")) {
 			int ticketReleaseRate = (int) request.get("ticket_release_rate");
 			config.setTicketReleaseRate(ticketReleaseRate);
@@ -118,7 +118,7 @@ public class BackendApplication {
 
 		if (request.containsKey("customer_retrieval_rate")) {
 			int customerRetrievalRate = (int) request.get("customer_retrieval_rate");
-			config.setCustomerRetrivalRate(customerRetrievalRate);
+			config.setCustomerRetrievalRate(customerRetrievalRate);
 			System.out.printf("Updated customer retrieval rate to %d%n", customerRetrievalRate);
 		}
 
