@@ -1,0 +1,7 @@
+<div *ngIf="tickets.length === 0" class="text-center">No tickets available!</div>
+<div class="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+  <div *ngFor="let ticket of tickets; let i = index" class="bg-muted p-2 rounded-sm">
+    <p>Ticket ID: {{ ticket.id }}</p>
+    <p>by vendor: {{ ticket.vendorId }}</p>
+  </div>
+</div>
