@@ -1,1 +1,89 @@
-<p class="text-foreground">navigation-bar works!</p>
+<nav
+  class="flex justify-between items-center bg-background-secondary p-4 text-foreground"
+>
+  <a href="" class="border-none">
+    <p class="inline-flex items-center gap-x-2 text-2xl font-semibold">
+      <span
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-ticket text-violet-600"
+        >
+          <path
+            d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"
+          />
+          <path d="M13 5v2" />
+          <path d="M13 17v2" />
+          <path d="M13 11v2" /></svg
+      ></span>
+      Home
+    </p>
+  </a>
+  <ul
+    class="absolute flex top-0 right-1/2 translate-x-1/2 translate-y-1/2 gap-x-1 border border-border rounded-md p-1 text-sm text-foreground"
+  >
+    <a
+      *ngFor="let item of navigationLinks"
+      href="{{ item.link }}"
+      class="hover:bg-secondary px-2 py-1 rounded-sm transition-colors duration-200 ease-in-out {{
+        routeIsActive(item.link)
+          ? 'bg-secondary text-foreground'
+          : 'bg-background-secondary text-foreground'
+      }}"
+      ><li>{{ item.title }}</li></a
+    >
+  </ul>
+  <p class="inline-flex items-center gap-x-2 text-sm font-semibold">
+    <span
+      class="rounded-full  p-1 text-white text-xs font-bold {{
+        isRunning ? 'bg-violet-600' : 'border border-border'
+      }}"
+      ><svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-zap animate-pulse"
+        *ngIf="isRunning"
+      >
+        <path
+          d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+        />
+      </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-zap-off text-muted-foreground"
+        *ngIf="!isRunning"
+      >
+        <path d="M10.513 4.856 13.12 2.17a.5.5 0 0 1 .86.46l-1.377 4.317" />
+        <path d="M15.656 10H20a1 1 0 0 1 .78 1.63l-1.72 1.773" />
+        <path
+          d="M16.273 16.273 10.88 21.83a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14H4a1 1 0 0 1-.78-1.63l4.507-4.643"
+        />
+        <path d="m2 2 20 20" />
+      </svg>
+    </span>
+
+    {{ isRunning ? "Running" : "Not Running" }}
+  </p>
+</nav>
