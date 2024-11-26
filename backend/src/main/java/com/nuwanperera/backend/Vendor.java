@@ -7,6 +7,8 @@ public class Vendor implements Runnable {
   private int ticketPerRelease;
   private int releaseInterval;
 
+  private volatile boolean isRunning = true;
+
   public Vendor(int ticketPerRelease, int releaseInterval) {
     this.id = new Random().nextInt(100_000);
     this.ticketPerRelease = ticketPerRelease;
@@ -51,5 +53,13 @@ public class Vendor implements Runnable {
 
   public int setReleaseInterval(int releaseInterval) {
     return this.releaseInterval = releaseInterval;
+  }
+
+  public boolean getRunningStatus() {
+    return isRunning;
+  }
+
+  public void setRunningStatus(boolean isRunning) {
+    this.isRunning = isRunning;
   }
 }

@@ -6,6 +6,8 @@ public class Customer implements Runnable {
   private final int id;
   private int retrievalInterval;
 
+  private volatile boolean isRunning = true;
+
   public Customer(int retrievalInterval) {
     this.id = new Random().nextInt(100_000);
     this.retrievalInterval = retrievalInterval;
@@ -14,7 +16,7 @@ public class Customer implements Runnable {
   @Override
   public void run() {
     while (true) {
-      if (!Configuration.getInstance().getRunningStatus()) {
+      if (!Configuration.getInstance().getRunningStatus() || !isRunning) {
         continue;
       }
       TicketPool.getInstance().removeTicket(this.id);
@@ -37,5 +39,13 @@ public class Customer implements Runnable {
 
   public void setRetrievalInterval(int retrievalInterval) {
     this.retrievalInterval = retrievalInterval;
+  }
+
+  public boolean getRunningStatus() {
+    return isRunning;
+  }
+
+  public void setRunningStatus(boolean isRunning) {
+    this.isRunning = isRunning;
   }
 }
