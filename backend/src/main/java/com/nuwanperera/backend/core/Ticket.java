@@ -1,4 +1,4 @@
-package com.nuwanperera.backend;
+package com.nuwanperera.backend.core;
 
 import java.util.Random;
 

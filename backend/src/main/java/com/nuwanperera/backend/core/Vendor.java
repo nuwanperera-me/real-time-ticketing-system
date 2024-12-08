@@ -1,9 +1,14 @@
-package com.nuwanperera.backend;
+package com.nuwanperera.backend.core;
 
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Vendor implements Runnable {
   private TicketPool ticketPool = TicketPool.getInstance();
+
+  private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
   private final int vendorId;
   private int ticketsPerRelease;
@@ -28,7 +33,7 @@ public class Vendor implements Runnable {
         Thread.sleep(releaseInterval * 1000);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        System.out.printf("Vendor %d interrupted.%n", vendorId);
+        LOGGER.error("Vendor {} interrupted.", vendorId, e);
       }
     }
   }
@@ -66,6 +71,7 @@ public class Vendor implements Runnable {
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         System.out.printf("Vendor %d interrupted.%n", vendorId);
+        LOGGER.error("Vendor {} interrupted.", vendorId, e);
       }
     }
   }

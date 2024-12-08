@@ -3,12 +3,17 @@ package com.nuwanperera.backend.config;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
 public class Configuration {
   private static Configuration instance;
 
   private static Gson gson = new Gson();
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
   private volatile boolean isRunning = true;
 
@@ -45,6 +50,7 @@ public class Configuration {
   public synchronized void setRunningStatus(boolean isRunning) {
     this.isRunning = isRunning;
     saveConfiguration("config.json");
+    LOGGER.info(String.format("System Running status is set to %s", isRunning));
     if (isRunning) {
       notifyAll();
     }
@@ -73,11 +79,6 @@ public class Configuration {
     }
   }
 
-  // public void setRunningStatus(boolean isRunning) {
-  // this.isRunning = isRunning;
-  // saveConfiguration("config.json");
-  // }
-
   public synchronized int getTotalTickets() {
     return totalTickets;
   }
@@ -88,6 +89,7 @@ public class Configuration {
     }
     this.totalTickets = totalTickets;
     saveConfiguration("config.json");
+    LOGGER.info(String.format("Total tickets set to %d", totalTickets));
   }
 
   public synchronized int getTicketReleaseRate() {
@@ -100,6 +102,7 @@ public class Configuration {
     }
     this.ticketReleaseRate = ticketReleaseRate;
     saveConfiguration("config.json");
+    LOGGER.info(String.format("Ticket release rate set to %d", ticketReleaseRate));
   }
 
   public synchronized int getCustomerRetrievalRate() {
@@ -112,6 +115,7 @@ public class Configuration {
     }
     this.customerRetrievalRate = customerRetrivalRate;
     saveConfiguration("config.json");
+    LOGGER.info(String.format("Customer retrival rate set to %d", customerRetrivalRate));
   }
 
   public synchronized int getMaxTicketsCapacity() {
@@ -124,5 +128,6 @@ public class Configuration {
     }
     this.maxTicketsCapacity = maxTicketsCapacity;
     saveConfiguration("config.json");
+    LOGGER.info(String.format("Max tickets capacity set to %d", maxTicketsCapacity));
   }
 }

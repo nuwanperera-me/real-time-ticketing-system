@@ -1,11 +1,15 @@
-package com.nuwanperera.backend;
+package com.nuwanperera.backend.core;
 
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Customer implements Runnable {
   private final int customerId;
   private int retrievalInterval;
+
+  private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
   private volatile boolean isRunning = true;
 
@@ -23,7 +27,7 @@ public class Customer implements Runnable {
         Thread.sleep(retrievalInterval * 1000);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        e.printStackTrace();
+        LOGGER.error("Thread interrupted while waiting for retrieval interval", e);
       }
     }
   }
@@ -49,7 +53,7 @@ public class Customer implements Runnable {
         wait();
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        e.printStackTrace();
+        LOGGER.error("Thread interrupted while waiting for customer to start", e);
       }
     }
   }
