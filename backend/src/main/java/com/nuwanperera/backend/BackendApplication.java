@@ -9,9 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nuwanperera.backend.config.Configuration;
 
 @SpringBootApplication
 @RestController
@@ -45,15 +50,25 @@ public class BackendApplication {
 		}
 
 		Customer customer = new Customer(retrievalInterval);
-		customers.put(customer.getId(), customer);
+		customers.put(customer.getCustomerId(), customer);
 
-		Thread customerThread = new Thread(customer, "CustomerThread-" + customer.getId());
+		Thread customerThread = new Thread(customer, "CustomerThread-" + customer.getCustomerId());
 		customerThread.start();
 		threads.put(customerThread.getName(), customerThread);
 
-		System.out.printf("Created customer with id %d and retrieval interval %d%n", customer.getId(), retrievalInterval);
+		System.out.printf("Created customer with id %d and retrieval interval %d%n", customer.getCustomerId(), retrievalInterval);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(customer);
+	}
+
+	@PostMapping("/customers/{id}/toggle")
+	public ResponseEntity<Object> toggleCustomer(@PathVariable("id") int customerId) {
+		Customer customer = customers.get(customerId);
+		if (customer == null) {
+			return ResponseEntity.notFound().build();
+		}
+		customer.setRunningStatus(!customer.getRunningStatus());
+		return ResponseEntity.ok().body(customer);
 	}
 
 	@PostMapping("/vendors")
@@ -73,17 +88,45 @@ public class BackendApplication {
 			return ResponseEntity.badRequest().body("tickets_per_release is required");
 		}
 
-		Vendor vendor = new Vendor(releaseInterval, ticketsPerRelease);
-		vendors.put(vendor.getId(), vendor);
-		Thread vendorThread = new Thread(vendor, "VendorThread-" + vendor.getId());
+		Vendor vendor = new Vendor(ticketsPerRelease, releaseInterval);
+		vendors.put(vendor.getVendorId(), vendor);
+		Thread vendorThread = new Thread(vendor, "VendorThread-" + vendor.getVendorId());
 		vendorThread.start();
 		threads.put(vendorThread.getName(), vendorThread);
 
-		System.out.printf("Created vendor with id %d and release interval %d and tickets per release %d%n", vendor.getId(),
+		System.out.printf("Created vendor with id %d and release interval %d and tickets per release %d%n", vendor.getVendorId(),
 				releaseInterval, ticketsPerRelease);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
 	}
+
+	@PutMapping("/vendors/{id}")
+	public ResponseEntity<Object> updateVendor(@PathVariable("id") int vendorId, @RequestBody HashMap<String, Object> request) {
+		Vendor vendor = vendors.get(vendorId);
+		if (vendor == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		if (request.containsKey("release_interval")) {
+			vendor.setReleaseInterval((int) request.get("release_interval"));
+		}
+		if (request.containsKey("tickets_per_release")) {
+			vendor.setTicketsPerRelease((int) request.get("tickets_per_release"));
+		}
+		return ResponseEntity.ok().body(vendor);
+			// vendor.setTicketsPerRelease((int) request.get("tickets_per_release"));
+		}
+
+		@PostMapping("/vendors/{id}/toggle")
+		public ResponseEntity<Object> toggleVendor(@PathVariable("id") int vendorId) {
+			Vendor vendor = vendors.get(vendorId);
+			if (vendor == null) {
+				return ResponseEntity.notFound().build();
+			}
+			vendor.setRunningStatus(!vendor.getRunningStatus());
+			return ResponseEntity.ok().body(vendor);
+		}
+
 
 	@GetMapping("/threads")
 	public HashMap<String, String> getThreadsNames() {
@@ -106,11 +149,11 @@ public class BackendApplication {
 		if (request.containsKey("status")) {
 			config.setRunningStatus((boolean) request.get("status"));
 		}
-		// if (request.containsKey("total_tickets")) {
-		// int totalTickets = (int) request.get("total_tickets");
-		// config.setTotalTickets(totalTickets);
-		// System.out.printf("Updated total tickets to %d%n", totalTickets);
-		// }
+		if (request.containsKey("total_tickets")) {
+		int totalTickets = (int) request.get("total_tickets");
+		config.setTotalTickets(totalTickets);
+		System.out.printf("Updated total tickets to %d%n", totalTickets);
+		}
 		if (request.containsKey("ticket_release_rate")) {
 			int ticketReleaseRate = (int) request.get("ticket_release_rate");
 			config.setTicketReleaseRate(ticketReleaseRate);
@@ -129,11 +172,11 @@ public class BackendApplication {
 			System.out.printf("Updated max tickets capacity to %d%n", maxTicketsCapacity);
 		}
 
-		if (request.containsKey("release_interval")) {
-			int releaseInterval = (int) request.get("release_interval");
-			config.setReleaseInterval(releaseInterval);
-			System.out.printf("Updated release interval to %d%n", releaseInterval);
-		}
+		// if (request.containsKey("release_interval")) {
+		// 	int releaseInterval = (int) request.get("release_interval");
+		// 	config.setReleaseInterval(releaseInterval);
+		// 	System.out.printf("Updated release interval to %d%n", releaseInterval);
+		// }
 
 		return ResponseEntity.ok().body(config);
 	}
