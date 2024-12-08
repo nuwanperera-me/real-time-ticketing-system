@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.nuwanperera.backend.config.Configuration;
+
 public class TicketPool {
   private static TicketPool instance;
+  private Configuration configuration = Configuration.getInstance();
 
-  private List<Ticket> tickets = Collections.synchronizedList(new ArrayList<Ticket>());
+  private volatile List<Ticket> tickets = Collections.synchronizedList(new ArrayList<Ticket>());
 
-  private int totalTickets;
-  // private int maxTicketPoolSize = Configuration.getInstance().getMaxTicketsCapacity();
+  private volatile static int currentTotalTickets = 0;
 
-  private TicketPool() {}
+  private TicketPool() {
+  }
 
   public static TicketPool getInstance() {
     if (instance == null) {
@@ -21,50 +24,56 @@ public class TicketPool {
     return instance;
   }
 
-  public synchronized void addTicket(Ticket ticket) {
-    if (tickets.size() < Configuration.getInstance().getMaxTicketsCapacity()) {
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        e.printStackTrace();
+  public synchronized void addTicket(Vendor vendor) {
+    try {
+      if (currentTotalTickets >= configuration.getTotalTickets()) {
+        System.out.printf("Maximum number of tickets reached. Cannot add more tickets.%n");
+        return;
       }
-      System.out.printf("Adding ticket %d to the pool.%n", ticket.getId());
+      configuration.waitIfPaused();
+      while (this.getTicketCount() >= configuration.getMaxTicketsCapacity()) {
+        System.out.printf("Ticket pool is full. Vendor %d is waiting to add a ticket.%n", vendor.getVendorId());
+        wait();
+      }
+      Thread.sleep(configuration.getTicketReleaseRate() * 1000);
+      Ticket ticket = new Ticket(vendor);
       tickets.add(ticket);
+      currentTotalTickets++;
+      System.out.printf("Ticket %d added to the pool by vendor %d.%n", ticket.getTicketId(), vendor.getVendorId());
       notifyAll();
-    } else {
-      System.out.printf("Ticket pool is full. Cannot add ticket %d.%n", ticket.getId());
-      try {
-        wait();
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        e.printStackTrace();
-      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      e.printStackTrace();
     }
   }
 
-  public synchronized void removeTicket(int customerId) {
-    if (tickets.isEmpty()) {
-      System.out.println("Ticket pool is empty. Cannot remove ticket.");
-      try {
+  public synchronized void removeTicket(Customer customer) {
+    try {
+      while (tickets.isEmpty()) {
+        System.out.println("Ticket pool is empty. Cannot remove ticket.");
         wait();
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        e.printStackTrace();
       }
-    } else {
-      System.out.printf("Removing ticket %d from the pool by customer %d.%n", tickets.get(0).getId(), customerId);
+      configuration.waitIfPaused();
+
+      Thread.sleep(configuration.getCustomerRetrievalRate() * 1000);
       tickets.remove(0);
+      System.out.printf("Ticket removed from the pool by customer %d.%n", customer.getCustomerId());
       notifyAll();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      e.printStackTrace();
     }
   }
 
-  public List<Ticket> getTickets() {
+  public synchronized int getTicketCount() {
+    return tickets.size();
+  }
+
+  public synchronized int getCurrentTotalTickets() {
+    return currentTotalTickets;
+  }
+
+  public synchronized List<Ticket> getTickets() {
     return tickets;
   }
-
-  public int getTotalTickets() {
-    return totalTickets;
-  }
-
 }

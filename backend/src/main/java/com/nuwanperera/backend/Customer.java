@@ -2,26 +2,25 @@ package com.nuwanperera.backend;
 
 import java.util.Random;
 
+
 public class Customer implements Runnable {
-  private final int id;
+  private final int customerId;
   private int retrievalInterval;
 
   private volatile boolean isRunning = true;
 
   public Customer(int retrievalInterval) {
-    this.id = new Random().nextInt(100_000);
-    this.retrievalInterval = retrievalInterval;
+    this.customerId = new Random().nextInt(100_000);
+    setRetrievalInterval(retrievalInterval);
   }
 
   @Override
   public void run() {
     while (true) {
-      if (!Configuration.getInstance().getRunningStatus() || !isRunning) {
-        continue;
-      }
-      TicketPool.getInstance().removeTicket(this.id);
+      waitIfCustomerNotRunning();
+      TicketPool.getInstance().removeTicket(this);
       try {
-        Thread.sleep(retrievalInterval);
+        Thread.sleep(retrievalInterval * 1000);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         e.printStackTrace();
@@ -29,8 +28,8 @@ public class Customer implements Runnable {
     }
   }
 
-  public int getId() {
-    return id;
+  public int getCustomerId() {
+    return customerId;
   }
 
   public int getRetrievalInterval() {
@@ -38,14 +37,31 @@ public class Customer implements Runnable {
   }
 
   public void setRetrievalInterval(int retrievalInterval) {
+    if (retrievalInterval < 1) {
+      throw new IllegalArgumentException("Retrieval interval should be greater than 0");
+    }
     this.retrievalInterval = retrievalInterval;
   }
 
-  public boolean getRunningStatus() {
+  public synchronized void waitIfCustomerNotRunning() {
+    while (!isRunning) {
+      try {
+        wait();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public synchronized boolean getRunningStatus() {
     return isRunning;
   }
 
-  public void setRunningStatus(boolean isRunning) {
+  public synchronized void setRunningStatus(boolean isRunning) {
     this.isRunning = isRunning;
+    if (isRunning) {
+      notifyAll();
+    }
   }
 }

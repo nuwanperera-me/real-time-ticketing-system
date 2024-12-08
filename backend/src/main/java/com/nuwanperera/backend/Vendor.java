@@ -3,48 +3,49 @@ package com.nuwanperera.backend;
 import java.util.Random;
 
 public class Vendor implements Runnable {
-  private final int id;
-  private int ticketPerRelease;
+  private TicketPool ticketPool = TicketPool.getInstance();
+
+  private final int vendorId;
+  private int ticketsPerRelease;
   private int releaseInterval;
 
   private volatile boolean isRunning = true;
 
-  public Vendor(int ticketPerRelease, int releaseInterval) {
-    this.id = new Random().nextInt(100_000);
-    this.ticketPerRelease = ticketPerRelease;
-    this.releaseInterval = releaseInterval;
+  public Vendor(int ticketsPerRelease, int releaseInterval) {
+    this.vendorId = new Random().nextInt(100_000);
+    setTicketsPerRelease(ticketsPerRelease);
+    setReleaseInterval(releaseInterval);
   }
 
   @Override
   public void run() {
     while (true) {
-      if (!Configuration.getInstance().getRunningStatus()) {
-        continue;
-      }
-      for (int i = 0; i < ticketPerRelease; i++) {
-        Ticket ticket = new Ticket(this.id);
-        System.out.printf("Vendor %d is adding ticket %d%n", id, ticket.getId());
-        TicketPool.getInstance().addTicket(ticket);
+      for (int i = 0; i < ticketsPerRelease; i++) {
+        waitIfVendorNotRunning();
+        ticketPool.addTicket(this);
       }
       try {
-        Thread.sleep(releaseInterval);
+        Thread.sleep(releaseInterval * 1000);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        System.out.printf("Vendor %d interrupted.%n", id);
+        System.out.printf("Vendor %d interrupted.%n", vendorId);
       }
     }
   }
 
-  public int getId() {
-    return id;
+  public int getVendorId() {
+    return vendorId;
   }
 
-  public int getTicketPerRelease() {
-    return ticketPerRelease;
+  public int getTicketsPerRelease() {
+    return ticketsPerRelease;
   }
 
-  public int setTicketPerRelease(int ticketPerRelease) {
-    return this.ticketPerRelease = ticketPerRelease;
+  public int setTicketsPerRelease(int ticketPerRelease) {
+    if (ticketPerRelease < 0) {
+      throw new IllegalArgumentException("Ticket per release cannot be negative.");
+    }
+    return this.ticketsPerRelease = ticketPerRelease;
   }
 
   public int getReleaseInterval() {
@@ -52,14 +53,31 @@ public class Vendor implements Runnable {
   }
 
   public int setReleaseInterval(int releaseInterval) {
+    if (releaseInterval < 0) {
+      throw new IllegalArgumentException("Release interval cannot be negative.");
+    }
     return this.releaseInterval = releaseInterval;
   }
 
-  public boolean getRunningStatus() {
+  public synchronized void waitIfVendorNotRunning() {
+    while (!isRunning) {
+      try {
+        wait();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        System.out.printf("Vendor %d interrupted.%n", vendorId);
+      }
+    }
+  }
+
+  public synchronized boolean getRunningStatus() {
     return isRunning;
   }
 
-  public void setRunningStatus(boolean isRunning) {
+  public synchronized void setRunningStatus(boolean isRunning) {
     this.isRunning = isRunning;
+    if (isRunning) {
+      notifyAll();
+    }
   }
 }
