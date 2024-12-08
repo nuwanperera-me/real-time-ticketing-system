@@ -80,4 +80,8 @@ public class TicketPool {
   public synchronized List<Ticket> getTickets() {
     return tickets;
   }
+
+  public synchronized void notifyToResume() {
+    notifyAll();
+  }
 }

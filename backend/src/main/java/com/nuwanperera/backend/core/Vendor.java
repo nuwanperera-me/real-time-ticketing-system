@@ -34,6 +34,7 @@ public class Vendor implements Runnable {
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         LOGGER.error("Vendor {} interrupted.", vendorId, e);
+        break;
       }
     }
   }

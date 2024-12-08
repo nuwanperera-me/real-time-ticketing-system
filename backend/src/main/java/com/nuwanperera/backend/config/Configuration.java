@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.nuwanperera.backend.core.TicketPool;
 
 public class Configuration {
   private static Configuration instance;
@@ -128,6 +129,7 @@ public class Configuration {
     }
     this.maxTicketsCapacity = maxTicketsCapacity;
     saveConfiguration("config.json");
+    TicketPool.getInstance().notifyToResume();
     LOGGER.info(String.format("Max tickets capacity set to %d", maxTicketsCapacity));
   }
 }

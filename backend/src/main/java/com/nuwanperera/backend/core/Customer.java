@@ -28,6 +28,7 @@ public class Customer implements Runnable {
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         LOGGER.error("Thread interrupted while waiting for retrieval interval", e);
+        break;
       }
     }
   }
