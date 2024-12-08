@@ -3,19 +3,19 @@ package com.nuwanperera.backend;
 import java.util.Random;
 
 public class Ticket {
-  private final int id;
-  private final int vendorId;
+  private final int ticketId;
+  private final Vendor vendor;
 
-  public Ticket(int vendorId) {
-    this.id = new Random().nextInt(100_000);
-    this.vendorId = vendorId;
+  public Ticket(Vendor vendor) {
+    this.ticketId = new Random().nextInt(100_000);
+    this.vendor = vendor;
   }
 
-  public int getId() {
-    return id;
+  public int getTicketId() {
+    return ticketId;
   }
 
   public int getVendorId() {
-    return vendorId;
+    return vendor.getVendorId();
   }
 }
