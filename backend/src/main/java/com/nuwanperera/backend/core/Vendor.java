@@ -25,15 +25,16 @@ public class Vendor implements Runnable {
   @Override
   public void run() {
     while (true) {
-      for (int i = 0; i < ticketsPerRelease; i++) {
-        waitIfVendorNotRunning();
-        ticketPool.addTicket(this);
-      }
       try {
+        for (int i = 0; i < ticketsPerRelease; i++) {
+          waitIfVendorNotRunning();
+          ticketPool.addTicket(this);
+        }
         Thread.sleep(releaseInterval * 1000);
+
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        LOGGER.error("Vendor {} interrupted.", vendorId, e);
+        LOGGER.info(String.format("Vendor %d interrupted.", vendorId));
         break;
       }
     }

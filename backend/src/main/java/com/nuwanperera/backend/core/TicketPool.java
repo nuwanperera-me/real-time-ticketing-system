@@ -28,7 +28,7 @@ public class TicketPool {
     return instance;
   }
 
-  public synchronized void addTicket(Vendor vendor) {
+  public synchronized void addTicket(Vendor vendor) throws InterruptedException {
     try {
       if (currentTotalTickets >= configuration.getTotalTickets()) {
         LOGGER.info("Maximum number of tickets reached. Cannot add more tickets.");
@@ -47,7 +47,7 @@ public class TicketPool {
       notifyAll();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      e.printStackTrace();
+      throw e;
     }
   }
 
@@ -65,7 +65,6 @@ public class TicketPool {
       notifyAll();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      e.printStackTrace();
     }
   }
 
@@ -77,7 +76,7 @@ public class TicketPool {
     return currentTotalTickets;
   }
 
-  public synchronized List<Ticket> getTickets() {
+  public List<Ticket> getTickets() {
     return tickets;
   }
 
