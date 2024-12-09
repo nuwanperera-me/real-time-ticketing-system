@@ -18,10 +18,12 @@ public class VendorService {
 
   public Vendor addVendor(int ticketsPerRelease, int releaseInterval) {
     Vendor vendor = new Vendor(ticketsPerRelease, releaseInterval);
-    Thread vendorThread = new Thread(vendor);
+    Thread vendorThread = new Thread(vendor, "VT-" + vendor.getVendorId());
+
     vendors.put(vendor.getVendorId(), vendor);
     vendorThreads.put(vendor.getVendorId(), vendorThread);
     vendorThread.start();
+
     return vendor;
   }
 

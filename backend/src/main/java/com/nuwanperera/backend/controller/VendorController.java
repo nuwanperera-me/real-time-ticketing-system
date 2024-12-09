@@ -50,8 +50,8 @@ public class VendorController {
     return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<Object> updateRunnongStatus(@PathVariable("id") int vendorId,
+  @PatchMapping("/{vendorId}")
+  public ResponseEntity<Object> updateRunnongStatus(@PathVariable("vendorId") int vendorId,
       @RequestBody HashMap<String, Object> request) {
     boolean status;
     Vendor vendor;
@@ -68,8 +68,8 @@ public class VendorController {
     return ResponseEntity.ok(vendor);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteVendor(@PathVariable("id") int vendorId) {
+  @DeleteMapping("/{vendorId}")
+  public ResponseEntity<Object> deleteVendor(@PathVariable("vendorId") int vendorId) {
     Vendor vendor;
     try {
       vendor = vendorService.removeVendor(vendorId);

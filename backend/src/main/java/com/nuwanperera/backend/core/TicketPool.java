@@ -4,21 +4,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.LogManager;
 
+import com.nuwanperera.backend.utils.LogAppender;
 import com.nuwanperera.backend.config.Configuration;
 
 public class TicketPool {
   private static TicketPool instance;
+
   private Configuration configuration = Configuration.getInstance();
-  private static final Logger LOGGER = LoggerFactory.getLogger(TicketPool.class);
+  private Logger logger;
 
   private volatile List<Ticket> tickets = Collections.synchronizedList(new ArrayList<Ticket>());
 
   private volatile static int currentTotalTickets = 0;
 
   private TicketPool() {
+    this.logger = (Logger) LogManager.getRootLogger();
+    logger.addAppender(LogAppender.getInstance());
   }
 
   public static TicketPool getInstance() {
@@ -31,19 +35,23 @@ public class TicketPool {
   public synchronized void addTicket(Vendor vendor) throws InterruptedException {
     try {
       if (currentTotalTickets >= configuration.getTotalTickets()) {
-        LOGGER.info("Maximum number of tickets reached. Cannot add more tickets.");
+        logger.info("Maximum number of tickets reached. Cannot add more tickets.");
         return;
       }
+      
       configuration.waitIfPaused();
       while (this.getTicketCount() >= configuration.getMaxTicketsCapacity()) {
-        LOGGER.info("Ticket pool is full. Vendor {} is waiting to add a ticket.", vendor.getVendorId());
+        logger.info("Ticket pool is full. Vendor {} is waiting to add a ticket.", vendor.getVendorId());
         wait();
       }
       Thread.sleep(configuration.getTicketReleaseRate() * 1000);
+
       Ticket ticket = new Ticket(vendor);
       tickets.add(ticket);
       currentTotalTickets++;
-      LOGGER.info(String.format("Ticket %d added to the pool by vendor %d.", ticket.getTicketId(), vendor.getVendorId()));
+
+      logger
+          .info(String.format("Ticket %d added to the pool by vendor %d.", ticket.getTicketId(), vendor.getVendorId()));
       notifyAll();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -54,14 +62,14 @@ public class TicketPool {
   public synchronized void removeTicket(Customer customer) {
     try {
       while (tickets.isEmpty()) {
-        LOGGER.info("Ticket pool is empty. Cannot remove ticket.");
+        logger.info("Ticket pool is empty. Cannot remove ticket.");
         wait();
       }
       configuration.waitIfPaused();
 
       Thread.sleep(configuration.getCustomerRetrievalRate() * 1000);
       tickets.remove(0);
-      LOGGER.info(String.format("Ticket removed from the pool by customer %d.", customer.getCustomerId()));
+      logger.info(String.format("Ticket removed from the pool by customer %d.", customer.getCustomerId()));
       notifyAll();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();

@@ -42,8 +42,8 @@ public class CustomerController {
     return ResponseEntity.status(HttpStatus.CREATED).body(customer);
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<Object> updateRunnongStatus(@PathVariable("id") int id,
+  @PatchMapping("/{customerId}")
+  public ResponseEntity<Object> updateRunnongStatus(@PathVariable("customerId") int customerId,
       @RequestBody HashMap<String, Object> request) {
     boolean status;
     Customer customer;
@@ -53,15 +53,15 @@ public class CustomerController {
     status = (boolean) request.get("status");
 
     try {
-      customer = customerService.updateRunningStatus(id, status);
+      customer = customerService.updateRunningStatus(customerId, status);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.ok(customer);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteCustomer(@PathVariable("id") int customerId) {
+  @DeleteMapping("/{customerId}")
+  public ResponseEntity<Object> deleteCustomer(@PathVariable("customerId") int customerId) {
     Customer customer;
     try {
       customer = customerService.removeCustomer(customerId);

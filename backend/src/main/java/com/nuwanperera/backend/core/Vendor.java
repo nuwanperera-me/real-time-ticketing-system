@@ -2,13 +2,14 @@ package com.nuwanperera.backend.core;
 
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import com.nuwanperera.backend.utils.LogAppender;
 
 public class Vendor implements Runnable {
   private TicketPool ticketPool = TicketPool.getInstance();
-
-  private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+  private Logger logger;
 
   private final int vendorId;
   private int ticketsPerRelease;
@@ -20,6 +21,11 @@ public class Vendor implements Runnable {
     this.vendorId = new Random().nextInt(100_000);
     setTicketsPerRelease(ticketsPerRelease);
     setReleaseInterval(releaseInterval);
+
+    logger = (Logger) LogManager.getRootLogger();
+    logger.addAppender(LogAppender.getInstance());
+    logger.info(String.format("Vendor %d created with %d tickets per release and %d release interval.", vendorId,
+        ticketsPerRelease, releaseInterval));
   }
 
   @Override
@@ -31,10 +37,9 @@ public class Vendor implements Runnable {
           ticketPool.addTicket(this);
         }
         Thread.sleep(releaseInterval * 1000);
-
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        LOGGER.info(String.format("Vendor %d interrupted.", vendorId));
+        logger.info(String.format("Vendor %d interrupted.", vendorId));
         break;
       }
     }
@@ -73,7 +78,7 @@ public class Vendor implements Runnable {
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         System.out.printf("Vendor %d interrupted.%n", vendorId);
-        LOGGER.error("Vendor {} interrupted.", vendorId, e);
+        logger.error("Vendor {} interrupted.", vendorId, e);
       }
     }
   }
@@ -84,6 +89,7 @@ public class Vendor implements Runnable {
 
   public synchronized void setRunningStatus(boolean isRunning) {
     this.isRunning = isRunning;
+    logger.info(String.format("Vendor %d running status set to %s.", vendorId, isRunning));
     if (isRunning) {
       notifyAll();
     }

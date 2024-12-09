@@ -3,10 +3,11 @@ package com.nuwanperera.backend.config;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.google.gson.Gson;
+
+import com.nuwanperera.backend.utils.LogAppender;
 import com.nuwanperera.backend.core.TicketPool;
 
 public class Configuration {
@@ -14,7 +15,7 @@ public class Configuration {
 
   private static Gson gson = new Gson();
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+  private static Logger logger;
 
   private volatile boolean isRunning = true;
 
@@ -24,6 +25,8 @@ public class Configuration {
   private volatile int maxTicketsCapacity;
 
   private Configuration() {
+    logger = (Logger) LogManager.getRootLogger();
+    logger.addAppender(LogAppender.getInstance());
   }
 
   public static Configuration getInstance() {
@@ -51,7 +54,7 @@ public class Configuration {
   public synchronized void setRunningStatus(boolean isRunning) {
     this.isRunning = isRunning;
     saveConfiguration("config.json");
-    LOGGER.info(String.format("System Running status is set to %s", isRunning));
+    logger.info(String.format("System Running status is set to %s", isRunning));
     if (isRunning) {
       notifyAll();
     }
@@ -90,7 +93,7 @@ public class Configuration {
     }
     this.totalTickets = totalTickets;
     saveConfiguration("config.json");
-    LOGGER.info(String.format("Total tickets set to %d", totalTickets));
+    logger.info(String.format("Total tickets set to %d", totalTickets));
   }
 
   public synchronized int getTicketReleaseRate() {
@@ -103,7 +106,7 @@ public class Configuration {
     }
     this.ticketReleaseRate = ticketReleaseRate;
     saveConfiguration("config.json");
-    LOGGER.info(String.format("Ticket release rate set to %d", ticketReleaseRate));
+    logger.info(String.format("Ticket release rate set to %d", ticketReleaseRate));
   }
 
   public synchronized int getCustomerRetrievalRate() {
@@ -116,7 +119,7 @@ public class Configuration {
     }
     this.customerRetrievalRate = customerRetrivalRate;
     saveConfiguration("config.json");
-    LOGGER.info(String.format("Customer retrival rate set to %d", customerRetrivalRate));
+    logger.info(String.format("Customer retrival rate set to %d", customerRetrivalRate));
   }
 
   public synchronized int getMaxTicketsCapacity() {
@@ -130,6 +133,6 @@ public class Configuration {
     this.maxTicketsCapacity = maxTicketsCapacity;
     saveConfiguration("config.json");
     TicketPool.getInstance().notifyToResume();
-    LOGGER.info(String.format("Max tickets capacity set to %d", maxTicketsCapacity));
+    logger.info(String.format("Max tickets capacity set to %d", maxTicketsCapacity));
   }
 }
