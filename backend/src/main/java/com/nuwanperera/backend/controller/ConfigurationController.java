@@ -3,6 +3,7 @@ package com.nuwanperera.backend.controller;
 import java.util.HashMap;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,14 +14,15 @@ import com.nuwanperera.backend.config.Configuration;
 
 @RestController
 @RequestMapping("/api/config")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ConfigurationController {
 
-  @GetMapping
+	@GetMapping
 	public Configuration getConfiguration() {
 		return Configuration.getInstance();
 	}
 
-  @PatchMapping
+	@PatchMapping
 	public ResponseEntity<Object> updateConfiguration(@RequestBody HashMap<String, Object> request) {
 		Configuration config = Configuration.getInstance();
 

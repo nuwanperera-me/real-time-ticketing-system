@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import com.google.gson.Gson;
 
 import com.nuwanperera.backend.utils.LogAppender;
-import com.nuwanperera.backend.core.TicketPool;
 
 public class Configuration {
   private static Configuration instance;
@@ -17,7 +16,7 @@ public class Configuration {
 
   private static Logger logger;
 
-  private volatile boolean isRunning = true;
+  private volatile boolean systemStatus = true;
 
   private volatile int totalTickets;
   private volatile int ticketReleaseRate;
@@ -42,7 +41,7 @@ public class Configuration {
   }
 
   public synchronized void waitIfPaused() {
-    while (!isRunning) {
+    while (!systemStatus) {
       try {
         wait();
       } catch (InterruptedException e) {
@@ -51,17 +50,17 @@ public class Configuration {
     }
   }
 
-  public synchronized void setRunningStatus(boolean isRunning) {
-    this.isRunning = isRunning;
+  public synchronized void setRunningStatus(boolean systemStatus) {
+    this.systemStatus = systemStatus;
     saveConfiguration("config.json");
-    logger.info(String.format("System Running status is set to %s", isRunning));
-    if (isRunning) {
+    logger.info(String.format("System Running status is set to %s", systemStatus));
+    if (systemStatus) {
       notifyAll();
     }
   }
 
   public synchronized boolean getRunningStatus() {
-    return isRunning;
+    return systemStatus;
   }
 
   public void saveConfiguration(String filePath) {
@@ -132,7 +131,7 @@ public class Configuration {
     }
     this.maxTicketsCapacity = maxTicketsCapacity;
     saveConfiguration("config.json");
-    TicketPool.getInstance().notifyToResume();
+    // TicketPool.getInstance().notifyToResume();
     logger.info(String.format("Max tickets capacity set to %d", maxTicketsCapacity));
   }
 }

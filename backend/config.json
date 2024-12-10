@@ -1,1 +1,1 @@
-{"isRunning":true,"totalTickets":400,"ticketReleaseRate":2,"customerRetrievalRate":1,"maxTicketsCapacity":10}
+{"systemStatus":true,"totalTickets":500,"ticketReleaseRate":2,"customerRetrievalRate":1,"maxTicketsCapacity":20}
