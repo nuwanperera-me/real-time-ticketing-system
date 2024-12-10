@@ -1,7 +1,35 @@
-<div *ngIf="tickets.length === 0" class="text-center">No tickets available!</div>
-<div class="w-full grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
-  <div *ngFor="let ticket of tickets; let i = index" class="bg-muted p-2 rounded-sm">
-    <p>Ticket ID: {{ ticket.id }}</p>
-    <p>by vendor: {{ ticket.vendorId }}</p>
+
+<div
+  class="flex flex-col w-full min-h-36 p-2 gap-2 border border-muted rounded-3xl"
+>
+  <div
+    class="w-full flex justify-between items-center bg-muted font-medium text-muted-foreground p-2 rounded-2xl"
+  >
+    <p>Tickets:</p>
+    <p class="text-secondary-foreground">{{ tickets.length }} / {{ config.maxTicketsCapacity }}</p>
+  </div>
+  <div
+    *ngIf="tickets.length === 0"
+    class="min-h-24 flex justify-center items-center"
+  >
+    <p class="text-muted-foreground">No tickets available!</p>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2">
+    <div
+      *ngFor="let ticket of tickets; let i = index"
+      class="flex flex-col justify-between bg-muted p-2 text-sm rounded-2xl border h-24"
+    >
+      <div class="inline-flex justify-end">
+        <span class="bg-violet-100 px-1.5 py-0.5 rounded-lg font-medium"
+          ># {{ ticket.ticketId }}</span
+        >
+      </div>
+      <div class="w-full flex flex-col items-end">
+        <p class="text-secondary-foreground rounded-lg font-medium">
+          <span class="text-muted-foreground">vendor/ </span
+          >{{ ticket.vendorId }}
+        </p>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,11 +1,11 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { MasterService } from '../../core/services/master.service';
-
-export interface Ticket {
-  id: number;
-  vendorId: number;
-}
+import { Component, OnInit } from '@angular/core';
+import {
+  Ticket,
+  TicketStoreService,
+} from '../../core/store/ticket-store.service';
+import { TicketService } from '../../core/services/ticket.service';
+import { Configuration, ConfigurationStoreService } from '../../core/store/configuration-store.service';
 
 @Component({
   selector: 'app-ticket-display',
@@ -13,23 +13,33 @@ export interface Ticket {
   imports: [NgIf, NgFor],
   templateUrl: './ticket-display.component.html',
 })
-export class TicketDisplayComponent {
-  masterService = inject(MasterService);
-
+export class TicketDisplayComponent implements OnInit {
   tickets: Ticket[] = [];
 
-  constructor() {
-    this.getTickets();
+  config: Configuration = {
+    totalTickets: 0,
+    ticketReleaseRate: 0,
+    customerRetrievalRate: 0,
+    maxTicketsCapacity: 0,
+    runningStatus: false,
+  };
 
-    setInterval(() => {
-      this.getTickets();
-    }, 10);
-  }
+  constructor(
+    private ticketStore: TicketStoreService,
+    private ticketService: TicketService,
+    private configStore: ConfigurationStoreService,
+  ) {}
 
-  getTickets() {
-    this.masterService.getTickets().subscribe((data) => {
-      this.tickets = data;
-      console.log(data);
+  ngOnInit() {
+    this.ticketStore.tickets$.subscribe((tickets) => {
+      this.tickets = tickets;
     });
+
+    this.configStore.config$.subscribe((config) => {
+      if (config) this.config = { ... config}
+    });
+
+    this.ticketService.getAllTickets();
+    this.ticketService.startPolling();
   }
 }
