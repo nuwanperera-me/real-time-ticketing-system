@@ -5,7 +5,10 @@ import {
   TicketStoreService,
 } from '../../core/store/ticket-store.service';
 import { TicketService } from '../../core/services/ticket.service';
-import { Configuration, ConfigurationStoreService } from '../../core/store/configuration-store.service';
+import {
+  Configuration,
+  ConfigurationStoreService,
+} from '../../core/store/configuration-store.service';
 
 @Component({
   selector: 'app-ticket-display',
@@ -27,7 +30,7 @@ export class TicketDisplayComponent implements OnInit {
   constructor(
     private ticketStore: TicketStoreService,
     private ticketService: TicketService,
-    private configStore: ConfigurationStoreService,
+    private configStore: ConfigurationStoreService
   ) {}
 
   ngOnInit() {
@@ -36,10 +39,10 @@ export class TicketDisplayComponent implements OnInit {
     });
 
     this.configStore.config$.subscribe((config) => {
-      if (config) this.config = { ... config}
+      if (config) this.config = { ...config };
     });
 
-    this.ticketService.getAllTickets();
+    this.ticketService.fetchTickets();
     this.ticketService.startPolling();
   }
 }

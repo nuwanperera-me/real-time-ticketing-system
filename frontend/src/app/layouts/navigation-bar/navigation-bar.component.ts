@@ -1,16 +1,19 @@
-import { NgIf, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import {
   Configuration,
   ConfigurationStoreService,
 } from '../../core/store/configuration-store.service';
 import { ConfigurationService } from '../../core/services/configuration.service';
 
+export interface NavigationLinkProps {
+  title: string;
+  link: string;
+}
 @Component({
   selector: 'app-navigation-bar',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, NgClass],
   templateUrl: './navigation-bar.component.html',
 })
 export class NavigationBarComponent implements OnInit {
@@ -21,6 +24,8 @@ export class NavigationBarComponent implements OnInit {
     maxTicketsCapacity: 0,
     runningStatus: false,
   };
+
+  isSideBarOpen = false;
 
   navigationLinks = [
     { title: 'Vendors', link: '/vendors' },
@@ -43,16 +48,16 @@ export class NavigationBarComponent implements OnInit {
       if (config) this.config = { ...config };
     });
 
-    this.configService.getConfiguration();
+    this.configService.fetchConfiguration();
     this.configService.startPolling();
   }
 
   toggleRunningStatus() {
-    const { runningStatus, ...restConfig } = this.config;
-    this.configService.updateConfiguration({
-      runningStatus: !runningStatus,
-      ...restConfig,
-    });
-    this.configService.getConfiguration();
+    this.configService.updateRunningStatus(!this.config.runningStatus);
+    this.configService.fetchConfiguration();
+  }
+
+  handleToggleSideBar() {
+    this.isSideBarOpen = !this.isSideBarOpen;
   }
 }

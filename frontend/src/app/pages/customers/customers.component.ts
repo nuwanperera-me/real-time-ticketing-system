@@ -50,7 +50,7 @@ export class CustomersComponent implements OnInit {
   }
 
   addNewCustomer(): void {
-    this.customerService.addCustomer(this.newCustomer);
+    this.customerService.createCustomer(this.newCustomer);
     this.resetNewVendor();
     this.closeModel();
   }

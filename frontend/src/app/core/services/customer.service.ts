@@ -1,23 +1,16 @@
 import { Injectable } from '@angular/core';
-import axios, { AxiosInstance } from 'axios';
 import { CustomerStoreService } from '../store/customer-store.service';
+import httpClient from '../http/http-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomerService {
-  private client: AxiosInstance;
-
-  constructor(private customerStore: CustomerStoreService) {
-    this.client = axios.create({
-      baseURL: 'http://localhost:8080/api/customers',
-      timeout: 5000,
-    });
-  }
+  constructor(private customerStore: CustomerStoreService) {}
 
   async getAllCustomers() {
-    const response = await this.client.get('');
-    this.customerStore.updateCustomers(response.data);
+    const response = await httpClient.get('/customers');
+    this.customerStore.setConfiguration(response.data);
     return response.data;
   }
 
@@ -26,7 +19,7 @@ export class CustomerService {
     runningStatus: boolean
   ) {
     try {
-      const response = await this.client.patch(`/${customerId}`, {
+      const response = await httpClient.patch(`/customers/${customerId}`, {
         status: runningStatus,
       });
       console.log(response.data);
@@ -36,9 +29,9 @@ export class CustomerService {
     }
   }
 
-  async addCustomer({ retrievalInterval }: { retrievalInterval: number }) {
+  async createCustomer({ retrievalInterval }: { retrievalInterval: number }) {
     try {
-      const response = await this.client.post('', {
+      const response = await httpClient.post('/customers', {
         retrieval_interval: retrievalInterval,
       });
       this.getAllCustomers();
@@ -49,7 +42,7 @@ export class CustomerService {
 
   async deleteCustomer(customerId: number) {
     try {
-      await this.client.delete(`/${customerId}`);
+      await httpClient.delete(`/customers/${customerId}`);
       this.getAllCustomers();
     } catch (error) {
       console.error(error);

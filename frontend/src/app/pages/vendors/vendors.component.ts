@@ -52,7 +52,7 @@ export class VendorsComponent implements OnInit {
   }
 
   addVendor() {
-    this.vendorService.addVendor(this.newVendor);
+    this.vendorService.createVendor(this.newVendor);
     this.resetNewVendor();
     this.closeModel();
   }

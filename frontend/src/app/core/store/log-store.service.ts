@@ -8,7 +8,7 @@ export class LogStoreService {
   private logsSubject = new BehaviorSubject<string[]>([]);
   logs$ = this.logsSubject.asObservable();
 
-  updateLogs(logs: string[]) {
+  setLogs(logs: string[]) {
     this.logsSubject.next(logs);
   }
 

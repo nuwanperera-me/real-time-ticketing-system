@@ -1,24 +1,18 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { LogStoreService } from '../store/log-store.service';
+import httpClient from '../http/http-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LogService {
-  private client: AxiosInstance;
+  constructor(private logStore: LogStoreService) {}
 
-  constructor(private logStore: LogStoreService) {
-    this.client = axios.create({
-      baseURL: 'http://localhost:8080/api/logs',
-      timeout: 5000,
-    });
-  }
-
-  async getLogs() {
+  async fetchLogs() {
     try {
-      const response = await this.client.get('');
-      this.logStore.updateLogs(response.data);
+      const response = await httpClient.get('/logs');
+      this.logStore.setLogs(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -26,7 +20,7 @@ export class LogService {
 
   startPolling(interval: number = 1000) {
     setInterval(() => {
-      this.getLogs();
+      this.fetchLogs();
     }, interval);
   }
 }

@@ -27,7 +27,7 @@
     </p>
   </a>
   <ul
-    class="absolute flex top-0 right-1/2 translate-x-1/2 translate-y-1/2 z-10 bg-background gap-x-1 border border-border rounded-md p-1 text-sm text-foreground"
+    class="absolute hidden sm:flex top-0 right-1/2 translate-x-1/2 translate-y-1/2 z-10 bg-background gap-x-1 border border-border rounded-md p-1 text-sm text-foreground"
   >
     <a
       *ngFor="let item of navigationLinks"
@@ -40,50 +40,106 @@
       ><li>{{ item.title }}</li></a
     >
   </ul>
-  <p class="inline-flex items-center gap-x-2 text-sm font-semibold cursor-pointer" (click)="toggleRunningStatus()">
-    <span
-      class="rounded-full  p-1 text-white text-xs font-bold {{
-        config.runningStatus ? 'bg-violet-600' : 'border border-border'
-      }}"
-      ><svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="lucide lucide-zap animate-pulse"
-        *ngIf="config.runningStatus"
-      >
-        <path
-          d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
-        />
-      </svg>
+  <div class="flex flex-shrink-0 gap-x-2">
+    <button
+      class="inline-flex items-center gap-x-2 text-sm font-semibold cursor-pointer"
+      (click)="toggleRunningStatus()"
+    >
+      <span
+        class="rounded-full  p-1 text-white text-xs font-bold {{
+          config.runningStatus ? 'bg-violet-600' : 'border border-border'
+        }}"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-zap animate-pulse"
+          *ngIf="config.runningStatus"
+        >
+          <path
+            d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+          />
+        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-zap-off text-muted-foreground"
+          *ngIf="!config.runningStatus"
+        >
+          <path d="M10.513 4.856 13.12 2.17a.5.5 0 0 1 .86.46l-1.377 4.317" />
+          <path d="M15.656 10H20a1 1 0 0 1 .78 1.63l-1.72 1.773" />
+          <path
+            d="M16.273 16.273 10.88 21.83a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14H4a1 1 0 0 1-.78-1.63l4.507-4.643"
+          />
+          <path d="m2 2 20 20" />
+        </svg>
+      </span>
+
+      {{ config.runningStatus ? "Running" : "Not Running" }}
+    </button>
+    <button (click)="handleToggleSideBar()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="lucide lucide-zap-off text-muted-foreground"
-        *ngIf="!config.runningStatus"
+        class="lucide lucide-panel-right-open w-5 h-5"
       >
-        <path d="M10.513 4.856 13.12 2.17a.5.5 0 0 1 .86.46l-1.377 4.317" />
-        <path d="M15.656 10H20a1 1 0 0 1 .78 1.63l-1.72 1.773" />
-        <path
-          d="M16.273 16.273 10.88 21.83a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14H4a1 1 0 0 1-.78-1.63l4.507-4.643"
-        />
-        <path d="m2 2 20 20" />
+        <rect width="18" height="18" x="3" y="3" rx="2" />
+        <path d="M15 3v18" />
+        <path d="m10 15-3-3 3-3" />
       </svg>
-    </span>
-
-    {{ config.runningStatus ? "Running" : "Not Running" }}
-  </p>
+    </button>
+  </div>
+  <nav
+    class="absolute top-0 right-0 bg-background max-w-80 w-full h-dvh flex flex-col flex-shrink-0 gap-x-2 z-30 border-l border-border "
+    ngClass="{{ isSideBarOpen ? 'flex' : 'hidden' }}"
+  >
+    <div class="w-full flex flex-shrink-0 justify-end gap-x-2">
+      <button
+        (click)="handleToggleSideBar()"
+        class="inline-flex items-center gap-x-2 text-sm font-semibold cursor-pointer my-6 mx-4"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-panel-right-close w-5 h-5"
+        >
+          <rect width="18" height="18" x="3" y="3" rx="2" />
+          <path d="M15 3v18" />
+          <path d="m8 9 3 3-3 3" />
+        </svg>
+      </button>
+    </div>
+    <ul class="w-full flex flex-col gap-y-2">
+      <a
+        *ngFor="let item of navigationLinks"
+        class="w-full px-2 py-1 transition-colors duration-200 ease-in-out hover:bg-muted"
+        href="{{ item.link }}"
+      >
+        <li class="flex items-center gap-x-2 text-sm font-semibold text-foreground">{{ item.title }}</li>
+      </a>
+    </ul>
+  </nav>
 </nav>

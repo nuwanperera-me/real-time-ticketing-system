@@ -1,24 +1,17 @@
 import { Injectable } from '@angular/core';
-import axios, { AxiosInstance } from 'axios';
 import { TicketStoreService } from '../store/ticket-store.service';
+import httpClient from '../http/http-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TicketService {
-  private client: AxiosInstance;
+  constructor(private ticketStore: TicketStoreService) {}
 
-  constructor(private ticketStore: TicketStoreService) {
-    this.client = axios.create({
-      baseURL: 'http://localhost:8080/api/tickets',
-      timeout: 5000,
-    });
-  }
-
-  async getAllTickets() {
+  async fetchTickets() {
     try {
-      const response = await this.client.get('');
-      this.ticketStore.updateTickets(response.data);
+      const response = await httpClient.get('/tickets');
+      this.ticketStore.setTickets(response.data);
     } catch (error: any) {
       console.error(error);
     }
@@ -26,7 +19,7 @@ export class TicketService {
 
   startPolling(interval: number = 1000) {
     setInterval(() => {
-      this.getAllTickets();
+      this.fetchTickets();
     }, interval);
   }
 }

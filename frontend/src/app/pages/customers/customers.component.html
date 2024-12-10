@@ -30,20 +30,20 @@
     <table class="w-full text-sm">
       <thead class="border-b">
         <tr
-          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          class="border-b transition-colors hover:bg-muted/50"
         >
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Customer ID
           </th>
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Retrieval Interval
           </th>
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Running Status
           </th>
@@ -52,20 +52,20 @@
       <tbody class="border-0">
         <tr
           *ngFor="let customer of Customers"
-          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          class="border-b transition-colors hover:bg-muted/50"
         >
           <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="p-2 align-middle"
           >
             {{ customer.customerId }}
           </td>
           <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="p-2 align-middle"
           >
             {{ customer.retrievalInterval }}s
           </td>
           <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="p-2 align-middle"
           >
             <label class="relative inline-flex items-center cursor-pointer">
               <input

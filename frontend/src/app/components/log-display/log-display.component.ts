@@ -23,7 +23,7 @@ export class LogDisplayComponent implements OnInit {
       this.logs = logs;
     });
 
-    this.logService.getLogs();
+    this.logService.fetchLogs();
     this.logService.startPolling();
   }
 

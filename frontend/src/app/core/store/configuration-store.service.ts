@@ -22,7 +22,7 @@ export class ConfigurationStoreService {
   });
   config$ = this.configSubject.asObservable();
 
-  updateConfiguration(config: Configuration) {
+  setConfiguration(config: Configuration) {
     this.configSubject.next(config);
   }
 

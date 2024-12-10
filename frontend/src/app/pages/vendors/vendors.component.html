@@ -29,26 +29,24 @@
   <div class="relative w-full overflow-auto">
     <table class="w-full text-sm">
       <thead class="border-b">
-        <tr
-          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-        >
+        <tr class="border-b transition-colors hover:bg-muted/50">
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Vendor ID
           </th>
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Release Interval
           </th>
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Tickets Per Release
           </th>
           <th
-            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
             Running Status
           </th>
@@ -57,26 +55,14 @@
       <tbody class="border-0">
         <tr
           *ngFor="let vendor of vendors"
-          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+          class="border-b transition-colors hover:bg-muted/50"
         >
-          <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
-          >
+          <td class="p-2 align-middle">
             {{ vendor.vendorId }}
           </td>
-          <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
-          >
-            {{ vendor.releaseInterval }}s
-          </td>
-          <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
-          >
-            {{ vendor.ticketsPerRelease }}s
-          </td>
-          <td
-            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
-          >
+          <td class="p-2 align-middle">{{ vendor.releaseInterval }}s</td>
+          <td class="p-2 align-middle">{{ vendor.ticketsPerRelease }}s</td>
+          <td class="p-2 align-middle">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"

@@ -15,7 +15,7 @@ export class VendorStoreService {
   private vendorsSubject = new BehaviorSubject<Vendor[]>([]);
   vendors$ = this.vendorsSubject.asObservable();
 
-  updateVendor(vendors: Vendor[]): void {
+  setVendors(vendors: Vendor[]): void {
     this.vendorsSubject.next(vendors);
   }
 

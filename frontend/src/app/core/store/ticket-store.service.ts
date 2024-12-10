@@ -13,7 +13,7 @@ export class TicketStoreService {
   private ticketsSubject = new BehaviorSubject<Ticket[]>([]);
   tickets$ = this.ticketsSubject.asObservable()
 
-  updateTickets(tickets: Ticket[]) {
+  setTickets(tickets: Ticket[]) {
     this.ticketsSubject.next(tickets);
   }
 

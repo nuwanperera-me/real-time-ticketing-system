@@ -14,7 +14,7 @@ export class CustomerStoreService {
   private customersSubject = new BehaviorSubject<Customer[]>([]);
   customers$ = this.customersSubject.asObservable();
 
-  updateCustomers(customers: Customer[]): void {
+  setConfiguration(customers: Customer[]): void {
     this.customersSubject.next(customers);
   }
 
