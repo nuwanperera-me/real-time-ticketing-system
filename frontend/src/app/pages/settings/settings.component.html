@@ -1,0 +1,86 @@
+<main
+  class="max-w-screen-lg min-h-[calc(100dvh-210px)] flex flex-col justify-center items-center mx-auto px-4"
+>
+  <div class="max-w-96 w-full border border-border rounded-2xl shadow-sm overflow-hidden">
+    <div class="flex flex-col bg-muted border-b border-border gap-2 p-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-cog w-12 h-12 text-muted-foreground"
+      >
+        <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" />
+        <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+        <path d="M12 2v2" />
+        <path d="M12 22v-2" />
+        <path d="m17 20.66-1-1.73" />
+        <path d="M11 10.27 7 3.34" />
+        <path d="m20.66 17-1.73-1" />
+        <path d="m3.34 7 1.73 1" />
+        <path d="M14 12h8" />
+        <path d="M2 12h2" />
+        <path d="m20.66 7-1.73 1" />
+        <path d="m3.34 17 1.73-1" />
+        <path d="m17 3.34-1 1.73" />
+        <path d="m11 13.73-4 6.93" />
+      </svg>
+      <h2 class="text-lg font-semibold text-muted-foreground">
+        Ticket System Configuration
+      </h2>
+    </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="text-sm font-medium">Total tickets:</label>
+      <input
+        name="TotalTickets"
+        type="number"
+        [(ngModel)]="config.totalTickets"
+
+        class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
+      />
+    </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="text-sm font-medium"
+        >Ticket Release Rate: (in seconds)</label
+      >
+      <input
+        name="TicketReleaseRate"
+        type="number"
+        [(ngModel)]="config.ticketReleaseRate"
+        class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
+      />
+    </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="text-sm font-medium"
+        >Customer Retrieval Rate: (in seconds)</label
+      >
+      <input
+        name="CustomerRetrievalRate"
+        type="number"
+        [(ngModel)]="config.customerRetrievalRate"
+        class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
+      />
+    </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="text-sm font-medium">Max Tickets Capacity:</label>
+      <input
+        name="MaxTicketsCapacity"
+        type="number"
+        [(ngModel)]="config.maxTicketsCapacity"
+        class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
+      />
+    </div>
+    <div class="flex items-center gap-2 justify-end p-4">
+      <button
+        type="submit"
+        class="w-full bg-black text-white px-3 rounded-lg h-9 text-sm font-medium self-end"
+        (click)="saveConfiguration()"
+      >
+        Save Changes
+      </button>
+    </div>
+  </div>
+</main>
