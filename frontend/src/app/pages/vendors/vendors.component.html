@@ -1,1 +1,243 @@
-<p class="text-foreground">vendors works!</p>
+<main
+  class="flex flex-col max-w-screen-lg min-h-[calc(100dvh_-_210px)] mx-auto px-4"
+>
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-semibold text-secondary-foreground mb-4">
+      Vendors
+    </h1>
+    <button
+      type="button"
+      (click)="openModel()"
+      class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-plus w-4 h-4"
+      >
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </svg>
+      Add Vendor
+    </button>
+  </div>
+  <div class="relative w-full overflow-auto">
+    <table class="w-full text-sm">
+      <thead class="border-b">
+        <tr
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Vendor ID
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Release Interval
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Tickets Per Release
+          </th>
+          <th
+            class="h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            Running Status
+          </th>
+        </tr>
+      </thead>
+      <tbody class="border-0">
+        <tr
+          *ngFor="let vendor of vendors"
+          class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+        >
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            {{ vendor.vendorId }}
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            {{ vendor.releaseInterval }}s
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            {{ vendor.ticketsPerRelease }}s
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                [checked]="vendor.runningStatus"
+                class="sr-only peer"
+                (change)="toggleVendorRunningStatus(vendor)"
+              />
+              <div
+                class="w-9 h-5 bg-gray-200 hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 hover:peer-checked:bg-indigo-700"
+              ></div>
+            </label>
+          </td>
+          <td
+            class="p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+          >
+            <button type="submit" (click)="deleteVendor(vendor)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-trash-2 w-4 h-4 hover:text-destructive transition-colors duration-200"
+              >
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                <line x1="10" x2="10" y1="11" y2="17" />
+                <line x1="14" x2="14" y1="11" y2="17" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- modal -->
+
+<div
+  *ngIf="isModelOpen"
+  class="absolute top-0 left-0 w-full h-dvh grid place-items-center bg-zinc-950/40 backdrop-filter backdrop-blur-sm z-20"
+>
+  <div
+    class="relative max-w-96 w-full bg-background border border-border rounded-2xl shadow-sm overflow-hidden"
+  >
+    <button
+      type="button"
+      (click)="closeModel()"
+      class="absolute top-2 right-2 p-1 rounded-md group"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-x w-4 h-4 group-hover:text-destructive transition-colors duration-200"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    </button>
+    <div class="flex flex-col bg-muted border-b border-border gap-2 p-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-user-plus w-12 h-12 text-muted-foreground"
+      >
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <line x1="19" x2="19" y1="8" y2="14" />
+        <line x1="22" x2="16" y1="11" y2="11" />
+      </svg>
+      <h2 class="text-lg font-semibold text-muted-foreground">Add Vendor</h2>
+    </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="text-sm font-medium"
+        >Tickets per release: (in seconds)
+        <span class="text-red-500">*</span></label
+      >
+      <input
+        name="TicketsPerRelease"
+        type="number"
+        required
+        [min]="1"
+        [(ngModel)]="newVendor.ticketsPerRelease"
+        #ticketsPerRelease="ngModel"
+        class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
+      />
+      <div
+        *ngIf="
+          ticketsPerRelease.invalid &&
+          (ticketsPerRelease.dirty || ticketsPerRelease.touched)
+        "
+      >
+        <small
+          class="text-red-500"
+          *ngIf="ticketsPerRelease.errors?.['required']"
+          >Tickets per release is required.</small
+        >
+        <small class="text-red-500" *ngIf="ticketsPerRelease.errors?.['min']"
+          >Must be greater than 0.</small
+        >
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 p-4">
+      <label class="text-sm font-medium"
+        >Release interval: (in seconds)
+        <span class="text-red-500">*</span></label
+      >
+      <input
+        name="ReleaseInterval"
+        type="number"
+        required
+        [min]="1"
+        [(ngModel)]="newVendor.releaseInterval"
+        #releaseInterval="ngModel"
+        class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
+      />
+      <div
+        *ngIf="
+          releaseInterval.invalid &&
+          (releaseInterval.dirty || releaseInterval.touched)
+        "
+      >
+        <small class="text-red-500" *ngIf="releaseInterval.errors?.['required']"
+          >Tickets per release is required.</small
+        >
+        <small class="text-red-500" *ngIf="releaseInterval.errors?.['min']"
+          >Must be greater than 0.</small
+        >
+      </div>
+
+      <div class="flex items-center gap-2 justify-end pt-4">
+        <button
+          type="submit"
+          class="w-full bg-black text-white px-3 rounded-lg h-9 text-sm font-medium self-end"
+          [ngClass]="
+            ticketsPerRelease.invalid || releaseInterval.invalid
+              ? 'opacity-80 cursor-not-allowed0'
+              : ''
+          "
+          [disabled]="ticketsPerRelease.invalid || releaseInterval.invalid"
+          (click)="addVendor()"
+        >
+          Add Vendor
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
