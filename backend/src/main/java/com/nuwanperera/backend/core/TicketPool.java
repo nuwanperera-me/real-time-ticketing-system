@@ -38,7 +38,7 @@ public class TicketPool {
         logger.info("Maximum number of tickets reached. Cannot add more tickets.");
         return;
       }
-      
+
       configuration.waitIfPaused();
       while (this.getTicketCount() >= configuration.getMaxTicketsCapacity()) {
         logger.info("Ticket pool is full. Vendor {} is waiting to add a ticket.", vendor.getVendorId());
@@ -70,6 +70,7 @@ public class TicketPool {
       Thread.sleep(configuration.getCustomerRetrievalRate() * 1000);
       tickets.remove(0);
       logger.info(String.format("Ticket removed from the pool by customer %d.", customer.getCustomerId()));
+
       notifyAll();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
@@ -86,9 +87,5 @@ public class TicketPool {
 
   public List<Ticket> getTickets() {
     return tickets;
-  }
-
-  public synchronized void notifyToResume() {
-    notifyAll();
   }
 }

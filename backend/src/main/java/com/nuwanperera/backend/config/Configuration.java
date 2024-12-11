@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.LogManager;
 import com.google.gson.Gson;
-
 import com.nuwanperera.backend.utils.LogAppender;
 
 public class Configuration {
@@ -131,7 +130,6 @@ public class Configuration {
     }
     this.maxTicketsCapacity = maxTicketsCapacity;
     saveConfiguration("config.json");
-    // TicketPool.getInstance().notifyToResume();
     logger.info(String.format("Max tickets capacity set to %d", maxTicketsCapacity));
   }
 }

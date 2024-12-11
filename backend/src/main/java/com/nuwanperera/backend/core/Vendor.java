@@ -77,8 +77,8 @@ public class Vendor implements Runnable {
         wait();
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        System.out.printf("Vendor %d interrupted.%n", vendorId);
-        logger.error("Vendor {} interrupted.", vendorId, e);
+        logger.error("Vendor {} interrupted.", vendorId);
+        break;
       }
     }
   }

@@ -62,6 +62,7 @@ public class Customer implements Runnable {
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         logger.error("Customer thread interrupted.");
+        break;
       }
     }
   }
