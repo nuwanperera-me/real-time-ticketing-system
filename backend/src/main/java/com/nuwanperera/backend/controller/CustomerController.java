@@ -2,6 +2,7 @@ package com.nuwanperera.backend.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,28 +37,34 @@ public class CustomerController {
   public ResponseEntity<Object> addCustomer(@RequestBody HashMap<String, Object> request) {
     int retrievalInterval;
     if (request.containsKey("retrieval_interval")) {
-      retrievalInterval = (int) request.get("retrieval_interval");
+      try {
+        retrievalInterval = (int) request.get("retrieval_interval");
+      } catch (Exception e) {
+        return ResponseEntity.badRequest().body(Map.of("error", "retrieval_interval should be an integer"));
+      }
     } else {
-      return ResponseEntity.badRequest().body("retrieval_interval is required");
+      return ResponseEntity.badRequest().body(Map.of("error", "retrieval_interval is required"));
     }
     Customer customer = customerService.addCustomer(retrievalInterval);
     return ResponseEntity.status(HttpStatus.CREATED).body(customer);
   }
 
   @PatchMapping("/{customerId}")
-  public ResponseEntity<Object> updateRunnongStatus(@PathVariable("customerId") int customerId,
+  public ResponseEntity<Object> updateRunningStatus(@PathVariable("customerId") int customerId,
       @RequestBody HashMap<String, Object> request) {
     boolean status;
     Customer customer;
     if (!request.containsKey("status")) {
-      return ResponseEntity.badRequest().body("Running status is required");
+      return ResponseEntity.badRequest().body(Map.of("error", "Running status is required"));
     }
-    status = (boolean) request.get("status");
 
     try {
+      status = (boolean) request.get("status");
       customer = customerService.updateRunningStatus(customerId, status);
     } catch (IllegalArgumentException e) {
       return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Invalid running status"));
     }
     return ResponseEntity.ok(customer);
   }

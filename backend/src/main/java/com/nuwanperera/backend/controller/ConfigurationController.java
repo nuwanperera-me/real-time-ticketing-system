@@ -30,21 +30,41 @@ public class ConfigurationController {
 			config.setRunningStatus((boolean) request.get("status"));
 		}
 		if (request.containsKey("total_tickets")) {
-			int totalTickets = (int) request.get("total_tickets");
+			int totalTickets;
+			try {
+				totalTickets = (int) request.get("total_tickets");
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().body("Invalid total_tickets value");
+			}
 			config.setTotalTickets(totalTickets);
 		}
 		if (request.containsKey("ticket_release_rate")) {
-			int ticketReleaseRate = (int) request.get("ticket_release_rate");
+			int ticketReleaseRate;
+			try {
+				ticketReleaseRate = (int) request.get("ticket_release_rate");
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().body("Invalid ticket_release_rate value");
+			}
 			config.setTicketReleaseRate(ticketReleaseRate);
 		}
 
 		if (request.containsKey("customer_retrieval_rate")) {
-			int customerRetrievalRate = (int) request.get("customer_retrieval_rate");
+			int customerRetrievalRate;
+			try {
+				customerRetrievalRate = (int) request.get("customer_retrieval_rate");
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().body("Invalid customer_retrieval_rate value");
+			}
 			config.setCustomerRetrievalRate(customerRetrievalRate);
 		}
 
 		if (request.containsKey("max_tickets_capacity")) {
-			int maxTicketsCapacity = (int) request.get("max_tickets_capacity");
+			int maxTicketsCapacity;
+			try {
+				maxTicketsCapacity = (int) request.get("max_tickets_capacity");
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().body("Invalid max_tickets_capacity value");
+			}
 			config.setMaxTicketsCapacity(maxTicketsCapacity);
 		}
 

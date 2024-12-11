@@ -2,6 +2,7 @@ package com.nuwanperera.backend.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,15 +39,23 @@ public class VendorController {
     int ticketsPerRelease;
 
     if (request.containsKey("release_interval")) {
-      releaseInterval = (int) request.get("release_interval");
+      try {
+        releaseInterval = (int) request.get("release_interval");
+      } catch (Exception e) {
+        return ResponseEntity.badRequest().body(Map.of("error", "release_interval should be an integer"));
+      }
     } else {
-      return ResponseEntity.badRequest().body("release_interval is required");
+      return ResponseEntity.badRequest().body(Map.of("error", "release_interval is required"));
     }
 
     if (request.containsKey("tickets_per_release")) {
-      ticketsPerRelease = (int) request.get("tickets_per_release");
+      try {
+        ticketsPerRelease = (int) request.get("tickets_per_release");
+      } catch (Exception e) {
+        return ResponseEntity.badRequest().body(Map.of("error", "tickets_per_release should be an integer"));
+      }
     } else {
-      return ResponseEntity.badRequest().body("tickets_per_release is required");
+      return ResponseEntity.badRequest().body(Map.of("error", "tickets_per_release is required"));
     }
     Vendor vendor = vendorService.addVendor(releaseInterval, ticketsPerRelease);
     return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
@@ -58,13 +67,16 @@ public class VendorController {
     boolean status;
     Vendor vendor;
     if (!request.containsKey("status")) {
-      return ResponseEntity.badRequest().body("running status is required");
+      return ResponseEntity.badRequest().body(Map.of("error", "status is required"));
     }
-    status = (boolean) request.get("status");
+
     try {
+      status = (boolean) request.get("status");
       vendor = vendorService.updateRunningStatus(vendorId, status);
     } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+      return ResponseEntity.notFound().build();
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(Map.of("error", "Invalid status value"));
     }
 
     return ResponseEntity.ok(vendor);
