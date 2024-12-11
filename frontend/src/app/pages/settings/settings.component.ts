@@ -5,11 +5,12 @@ import {
   ConfigurationStoreService,
 } from '../../core/store/configuration-store.service';
 import { ConfigurationService } from '../../core/services/configuration.service';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [FormsModule],
+  imports: [NgIf, NgClass, FormsModule],
   templateUrl: './settings.component.html',
 })
 export class SettingsComponent implements OnInit {

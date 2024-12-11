@@ -1,7 +1,9 @@
 <main
   class="max-w-screen-lg min-h-[calc(100dvh-210px)] flex flex-col justify-center items-center mx-auto px-4"
 >
-  <div class="max-w-96 w-full border border-border rounded-2xl shadow-sm overflow-hidden">
+  <div
+    class="max-w-96 w-full border border-border rounded-2xl shadow-sm overflow-hidden"
+  >
     <div class="flex flex-col bg-muted border-b border-border gap-2 p-4">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -35,49 +37,133 @@
     <div class="flex flex-col gap-2 p-4">
       <label class="text-sm font-medium">Total tickets:</label>
       <input
-        name="TotalTickets"
+        name="totalTickets"
         type="number"
+        required
+        [min]="1"
         [(ngModel)]="config.totalTickets"
-
+        #totalTickets="ngModel"
         class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
       />
+      <div
+        *ngIf="
+          totalTickets.invalid && (totalTickets.dirty || totalTickets.touched)
+        "
+      >
+        <small class="text-red-500" *ngIf="totalTickets.errors?.['required']"
+          >This field is required.</small
+        >
+        <small class="text-red-500" *ngIf="totalTickets.errors?.['min']"
+          >Must be greater than 0.</small
+        >
+      </div>
     </div>
     <div class="flex flex-col gap-2 p-4">
       <label class="text-sm font-medium"
         >Ticket Release Rate: (in seconds)</label
       >
       <input
-        name="TicketReleaseRate"
+        name="ticketReleaseRate"
         type="number"
+        required
+        [min]="1"
         [(ngModel)]="config.ticketReleaseRate"
+        #ticketReleaseRate="ngModel"
         class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
       />
+      <div
+        *ngIf="
+          ticketReleaseRate.invalid &&
+          (ticketReleaseRate.dirty || ticketReleaseRate.touched)
+        "
+      >
+        <small
+          class="text-red-500"
+          *ngIf="ticketReleaseRate.errors?.['required']"
+          >This field is required.</small
+        >
+        <small class="text-red-500" *ngIf="ticketReleaseRate.errors?.['min']"
+          >Must be greater than 0.</small
+        >
+      </div>
     </div>
     <div class="flex flex-col gap-2 p-4">
       <label class="text-sm font-medium"
         >Customer Retrieval Rate: (in seconds)</label
       >
       <input
-        name="CustomerRetrievalRate"
+        name="customerRetrievalRate"
         type="number"
+        required
+        [min]="1"
         [(ngModel)]="config.customerRetrievalRate"
+        #customerRetrievalRate="ngModel"
         class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
       />
+      <div
+        *ngIf="
+          customerRetrievalRate.invalid &&
+          (customerRetrievalRate.dirty || customerRetrievalRate.touched)
+        "
+      >
+        <small
+          class="text-red-500"
+          *ngIf="customerRetrievalRate.errors?.['required']"
+          >This field is required.</small
+        >
+        <small
+          class="text-red-500"
+          *ngIf="customerRetrievalRate.errors?.['min']"
+          >Must be greater than 0.</small
+        >
+      </div>
     </div>
     <div class="flex flex-col gap-2 p-4">
       <label class="text-sm font-medium">Max Tickets Capacity:</label>
       <input
-        name="MaxTicketsCapacity"
+        name="maxTicketsCapacity"
         type="number"
+        required
+        [min]="1"
         [(ngModel)]="config.maxTicketsCapacity"
+        #maxTicketsCapacity="ngModel"
         class="border border-zinc-200 rounded-lg h-9 px-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-zinc-800"
       />
+      <div
+        *ngIf="
+          maxTicketsCapacity.invalid &&
+          (maxTicketsCapacity.dirty || maxTicketsCapacity.touched)
+        "
+      >
+        <small
+          class="text-red-500"
+          *ngIf="maxTicketsCapacity.errors?.['required']"
+          >This field is required.</small
+        >
+        <small class="text-red-500" *ngIf="maxTicketsCapacity.errors?.['min']"
+          >Must be greater than 0.</small
+        >
+      </div>
     </div>
     <div class="flex items-center gap-2 justify-end p-4">
       <button
         type="submit"
         class="w-full bg-black text-white px-3 rounded-lg h-9 text-sm font-medium self-end"
         (click)="saveConfiguration()"
+        [ngClass]="
+          customerRetrievalRate.invalid ||
+          totalTickets.invalid ||
+          maxTicketsCapacity.invalid ||
+          ticketReleaseRate.invalid
+            ? 'opacity-80 cursor-not-allowed0'
+            : ''
+        "
+        [disabled]="
+          customerRetrievalRate.invalid ||
+          totalTickets.invalid ||
+          maxTicketsCapacity.invalid ||
+          ticketReleaseRate.invalid
+        "
       >
         Save Changes
       </button>

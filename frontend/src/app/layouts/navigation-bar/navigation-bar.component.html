@@ -90,7 +90,7 @@
 
       {{ config.runningStatus ? "Running" : "Not Running" }}
     </button>
-    <button (click)="handleToggleSideBar()">
+    <button (click)="handleToggleSideBar()" class="block sm:hidden">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -108,7 +108,7 @@
     </button>
   </div>
   <nav
-    class="absolute top-0 right-0 bg-background max-w-80 w-full h-dvh flex flex-col flex-shrink-0 gap-x-2 z-30 border-l border-border "
+    class="absolute top-0 right-0 bg-background max-w-80 w-full h-dvh flex flex-col flex-shrink-0 gap-x-2 z-30 border-l border-border"
     ngClass="{{ isSideBarOpen ? 'flex' : 'hidden' }}"
   >
     <div class="w-full flex flex-shrink-0 justify-end gap-x-2">
@@ -138,7 +138,11 @@
         class="w-full px-2 py-1 transition-colors duration-200 ease-in-out hover:bg-muted"
         href="{{ item.link }}"
       >
-        <li class="flex items-center gap-x-2 text-sm font-semibold text-foreground">{{ item.title }}</li>
+        <li
+          class="flex items-center gap-x-2 text-sm font-semibold text-foreground"
+        >
+          {{ item.title }}
+        </li>
       </a>
     </ul>
   </nav>

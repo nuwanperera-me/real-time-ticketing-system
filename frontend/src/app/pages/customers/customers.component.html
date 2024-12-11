@@ -29,9 +29,7 @@
   <div class="relative w-full overflow-auto">
     <table class="w-full text-sm">
       <thead class="border-b">
-        <tr
-          class="border-b transition-colors hover:bg-muted/50"
-        >
+        <tr class="border-b transition-colors hover:bg-muted/50">
           <th
             class="h-10 px-2 text-left align-middle font-medium text-muted-foreground"
           >
@@ -59,19 +57,11 @@
           *ngFor="let customer of Customers"
           class="border-b transition-colors hover:bg-muted/50"
         >
-          <td
-            class="p-2 align-middle"
-          >
+          <td class="p-2 align-middle">
             {{ customer.customerId }}
           </td>
-          <td
-            class="p-2 align-middle"
-          >
-            {{ customer.retrievalInterval }}s
-          </td>
-          <td
-            class="p-2 align-middle"
-          >
+          <td class="p-2 align-middle">{{ customer.retrievalInterval }}s</td>
+          <td class="p-2 align-middle">
             <label class="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -183,7 +173,7 @@
         <small
           class="text-red-500"
           *ngIf="retrievalInterval.errors?.['required']"
-          >Tickets per release is required.</small
+          >Retrieval interval is required.</small
         >
         <small class="text-red-500" *ngIf="retrievalInterval.errors?.['min']"
           >Must be greater than 0.</small
