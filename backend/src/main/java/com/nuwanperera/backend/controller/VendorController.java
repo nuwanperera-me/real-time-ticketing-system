@@ -61,6 +61,17 @@ public class VendorController {
     return ResponseEntity.status(HttpStatus.CREATED).body(vendor);
   }
 
+  @GetMapping("/{vendorId}")
+  public ResponseEntity<Vendor> getVendor(@PathVariable("vendorId") int vendorId) {
+    Vendor vendor;
+    try {
+      vendor = vendorService.getVendor(vendorId);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(vendor);
+  }
+
   @PatchMapping("/{vendorId}")
   public ResponseEntity<Object> updateRunnongStatus(@PathVariable("vendorId") int vendorId,
       @RequestBody HashMap<String, Object> request) {

@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 import com.nuwanperera.backend.core.Vendor;
+
 @Service
 public class VendorService {
 
@@ -39,6 +40,10 @@ public class VendorService {
     vendors.remove(vendorId);
     vendorThreads.remove(vendorId);
     return vendor;
+  }
+
+  public Vendor getVendor(int vendorId) {
+    return vendors.get(vendorId);
   }
 
   public Vendor updateRunningStatus(int vendorId, boolean runningStatus) {

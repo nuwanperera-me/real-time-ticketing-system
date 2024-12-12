@@ -12,6 +12,7 @@ public class Customer implements Runnable {
   private int retrievalInterval;
 
   private final Logger logger;
+  private TicketPool ticketPool = TicketPool.getInstance();
 
   private volatile boolean isRunning = true;
 
@@ -29,7 +30,7 @@ public class Customer implements Runnable {
   public void run() {
     while (true) {
       waitIfCustomerNotRunning();
-      TicketPool.getInstance().removeTicket(this);
+      ticketPool.removeTicket(this);
       try {
         Thread.sleep(retrievalInterval * 1000);
       } catch (InterruptedException e) {

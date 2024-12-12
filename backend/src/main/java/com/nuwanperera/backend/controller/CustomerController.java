@@ -49,6 +49,17 @@ public class CustomerController {
     return ResponseEntity.status(HttpStatus.CREATED).body(customer);
   }
 
+  @GetMapping("/{customerId}")
+  public ResponseEntity<Customer> getCustomer(@PathVariable("customerId") int customerId) {
+    Customer customer;
+    try {
+      customer = customerService.getCustomer(customerId);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(customer);
+  }
+
   @PatchMapping("/{customerId}")
   public ResponseEntity<Object> updateRunningStatus(@PathVariable("customerId") int customerId,
       @RequestBody HashMap<String, Object> request) {

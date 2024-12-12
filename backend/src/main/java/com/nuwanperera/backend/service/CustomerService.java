@@ -17,6 +17,10 @@ public class CustomerService {
 		return customers.values().stream().toList();
 	}
 
+	public Customer getCustomer(int customerId) {
+		return customers.get(customerId);
+	}
+
 	public Customer addCustomer(int retrievalInterval) {
 		Customer customer = new Customer(retrievalInterval);
 		Thread customerThread = new Thread(customer, "CT-" + customer.getCustomerId());

@@ -62,7 +62,7 @@ public class Configuration {
     return systemStatus;
   }
 
-  public void saveConfiguration(String filePath) {
+  private void saveConfiguration(String filePath) {
     try {
       FileWriter writer = new FileWriter(filePath);
       gson.toJson(this, writer);
@@ -73,7 +73,7 @@ public class Configuration {
     }
   }
 
-  public void loadConfiguration(String filePath) {
+  private void loadConfiguration(String filePath) {
     try {
       instance = gson.fromJson(new FileReader(filePath), Configuration.class);
     } catch (Exception e) {
