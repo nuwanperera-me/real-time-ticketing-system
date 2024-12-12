@@ -4,10 +4,6 @@ public class Ticket {
   private int ticketId;
   private int vendorId;
 
-  // public Ticket(int ticketId) {
-  // this.ticketId = ticketId;
-  // }
-
   public int getTicketId() {
     return ticketId;
   }
